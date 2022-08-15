@@ -66,6 +66,7 @@ long trap(vector<int> & height) {
         while(h_loc < h && trackr < end) {
             trackr++;
             h_loc = height[trackr];
+            // Compute max height right boundary
             if(h_loc > max_h) {
                 max_h = h_loc;
                 trackbk = trackr;
@@ -80,7 +81,7 @@ long trap(vector<int> & height) {
             ops++;
         }
         
-        // If there is no right wall with height greater than h, then choose height stored in backup trackbk
+        // If there is no right wall with height greater than h, then choose max height stored in backup trackbk
         if(trackr == end && h > max_h) {
             trackr = trackbk;
             h_loc = max_h;
