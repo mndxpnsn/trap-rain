@@ -10,6 +10,8 @@
 
 using namespace std;
 
+int ops = 0;
+
 int min(int a, int b) {
     int res = 0;
     
@@ -19,11 +21,11 @@ int min(int a, int b) {
     return res;
 }
 
-int trap(vector<int> & height) {
+long trap(vector<int> & height) {
     
     int n = (int) height.size();
     
-    int res = 0;
+    long res = 0;
     
     int trackl = 0;
     int trackr = 0;
@@ -38,11 +40,13 @@ int trap(vector<int> & height) {
     while(height[trackl + 1] >= height[trackl]) {
         trackl++;
         trackr++;
+        ops++;
     }
     
     // Get ending point
     while(end > 0 && height[end - 1] >= height[end]) {
         end--;
+        ops++;
     }
     
     
@@ -66,12 +70,14 @@ int trap(vector<int> & height) {
                 max_h = h_loc;
                 trackbk = trackr;
             }
+            ops++;
         }
 
         // If wall height at trackr is equal to the wall at trackl, then choose first trackr with wall with height greater or equal to wall at trackl
         while(trackr < end && h == height[trackr] && h <= height[trackr + 1]) {
             trackr++;
             h_loc = height[trackr];
+            ops++;
         }
         
         // If there is no right wall with height greater than h, then choose height stored in backup trackbk
@@ -87,6 +93,7 @@ int trap(vector<int> & height) {
         for(int i = trackl + 1; i < trackr; ++i) {
             int diff = h_low - height[i] >= 0 ? h_low - height[i] : 0;
             res = res + diff;
+            ops++;
         }
 
         // Update left track pointer
@@ -101,16 +108,31 @@ int trap(vector<int> & height) {
     return res;
 }
 
+void init_height_vec(vector<int> & height, int n) {
+    srand((unsigned) time(NULL));
+    for(int i = 0; i < n; ++i) {
+        int val = rand() % 100;
+        height.push_back(val);
+    }
+}
+
 int main(int argc, const char * argv[]) {
 
+    // Size input vector
+    int n = 1000;
+    
     // Input height vector
-    vector<int> height = {4, 2, 0, 3, 2, 5};
+    vector<int> height;
+    
+    // Initialize height vector with random data
+    init_height_vec(height, n);
     
     // Compute amount of rain water trapped
-    int amount_rain = trap(height);
+    long amount_rain = trap(height);
     
     // Print results
     cout << "amount of rain trapped: " << amount_rain << endl;
+    cout << "number of operations: " << ops << endl;
     
     return 0;
 }
